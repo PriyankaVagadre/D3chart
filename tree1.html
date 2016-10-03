@@ -1,0 +1,83 @@
+@@ -0,0 +1,82 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js">
+
+    </script> <script src="mydata.json"></script>     
+</head>
+<body>
+<script>
+    var width = 1200,
+        height = 1200;
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + 50 + "," + 50+ ")");
+
+    var tree= d3.layout.tree()
+        .size([1000,1000]);
+
+    var diagonal = d3.svg.diagonal()
+        .projection(function(d)
+        { return [d.y, d.x]; });
+
+    d3.json("mydata.json", function(data){
+
+        var nodes =tree.nodes(data);
+
+        var links = tree.links(nodes);
+
+        var node= svg.selectAll(".node")
+            .data(nodes)
+            .enter()
+            .append("g")
+            .attr("class", "node")
+            .attr("transform", function(d){
+                return "translate("+ d.y +","+ d.x +")"});
+
+        node.append("circle")
+            .attr("r", 5)
+            .attr("fill", "red");
+
+
+        node.append("text")
+            .text(function (d) {
+                return d.name;})
+            .attr("x", function(d)
+            { return d.children || d._children ? 50 : -10; })
+            .attr("dy", "20px")
+            .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+            .text(function(d) { return d.name; })
+
+
+         /* we can add images
+        node.append("image")
+            .attr("xlink:href", function(d) { return d.icon; })
+            .attr("x", "-20px")
+            .attr("y", "-30px")
+                   .attr("width", "50px")
+                            .attr("height", "50px")       */
+
+
+
+                                svg.selectAll(".link")
+                                   .data(links)
+                                   .enter()
+                                    .append("path")
+                                    .attr("class","link")
+                                    .attr("fill", "none")
+                                    .attr("stroke","black")
+                                    .attr("d", diagonal);      });
+</script>
+</body> </html>
+
